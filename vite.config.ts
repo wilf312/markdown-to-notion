@@ -24,7 +24,7 @@ export default defineConfig({
     lib: {
       entry: path.resolve(__dirname, "src/main.ts"),
       fileName: "main",
-      formats: ["es", "cjs"],
+      // formats: ["es", "cjs"],
     },
     rollupOptions: {
       external: [],
