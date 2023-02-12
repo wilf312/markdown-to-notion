@@ -1,24 +1,26 @@
-import { fromMarkdown } from "mdast-util-from-markdown";
-import { gfmTable } from "micromark-extension-gfm-table";
-import { gfmTableFromMarkdown } from "mdast-util-gfm-table";
+import { marked } from "marked";
+
 import { format as browserFormat } from "prettier/standalone";
+import prettier from "prettier";
 import babelParser from "prettier/parser-babel";
-import { Content, Root, Text } from "mdast";
 
 const prettierFormat = (text: string) => {
   try {
-    return browserFormat(text, {
+    console.log(`globalThis.window !== null`, globalThis.window !== null);
+    const p = globalThis.window !== null ? browserFormat : prettier.format;
+    return p(text, {
       plugins: [babelParser],
     });
   } catch (error) {
     console.error(error);
+    return ``;
   }
 };
 
 const markdown2AST = (markdown: string) => {
-  return fromMarkdown(markdown, {
-    extensions: [gfmTable],
-    mdastExtensions: [gfmTableFromMarkdown],
+  return marked.lexer(markdown, {
+    // extensions: [gfmTable],
+    // mdastExtensions: [gfmTableFromMarkdown],
   });
 };
 
@@ -28,13 +30,20 @@ const markdown2AST = (markdown: string) => {
  * @param {content | root} obj - The object to be converted, either 'content' or 'root' type
  * @returns {string} The Notion formatted string representation of the input object
  */
-const access = (obj: Content | Root): string => {
+const access = (obj: any): string => {
   if (obj.type === `root`) {
     return `[${obj.children
-      .map((d) => {
+      .map((d: any) => {
         return access(d);
       })
       .join(``)}]`;
+  } else if (typeof obj.length === "number") {
+    const data = obj
+      .map((d: any) => {
+        return access(d);
+      })
+      .join(``);
+    return `const data = [${data}]`;
   }
 
   if (obj.type === `text`) {
@@ -44,18 +53,16 @@ const access = (obj: Content | Root): string => {
   } else if (obj.type === `heading`) {
     // Notionにはheading 3までしか要素がないので、それ以上の場合は3に丸める
     const depth = obj.depth >= 3 ? 3 : obj.depth;
-    return `{ type: "heading_${depth}", heading_${depth}: { rich_text: [ ${access(
-      obj.children[0]
-    )} ], }, },`;
+    return `{ type: "heading_${depth}", heading_${depth}: { rich_text: [ "${obj.text}" ], }, },`;
   } else if (obj.type === `list`) {
-    return obj.children
-      .map((d) => {
+    return obj.items
+      .map((d: any) => {
         // TODOリスト、番号付きリスト、並列リスト
-        const node = d?.children[0] as any;
+        // const node = d?.children[0] as any;
 
-        if (!node) {
-          return `{ type: "text", text: { content: "", link: null } }`;
-        }
+        // if (!node) {
+        //   return `{ type: "text", text: { content: "", link: null } }`;
+        // }
 
         // if (node?.type === `thematicBreak`) {
         //   return `{ type: "divider", divider: {}, },`;
@@ -63,7 +70,7 @@ const access = (obj: Content | Root): string => {
         //   return `{ type: "text", text: { content: "", link: null } }`;
         // }
 
-        const text = node.value;
+        const text = d.text;
         if (text && (text.startsWith(`[ ] `) || text.startsWith(`[x] `))) {
           const done = text.startsWith(`[x] `);
           const formattedText = text.replace("[ ]", "").replace("[x]", "");
@@ -72,12 +79,14 @@ const access = (obj: Content | Root): string => {
           const listType = obj.ordered ? `numbered` : `bulleted`;
           return `
         { type: "${listType}_list_item", ${listType}_list_item: { rich_text: [
-          ${access(d)}
+          "${d.text}"
         ], }, },
         `;
         }
       })
       .join(``);
+  } else if (obj.type === `space`) {
+    return ``;
   } else {
     console.log(`unknown`, obj.type);
     return (obj as any).children.map((d: any) => {
@@ -89,6 +98,7 @@ const access = (obj: Content | Root): string => {
 export const run = (markdownText: string) => {
   // markdownをASTに変換
   const ast = markdown2AST(markdownText);
+
   // ASTをNotionオブジェクトに変換する
   const res = access(ast);
 

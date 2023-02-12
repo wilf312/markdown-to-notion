@@ -1,43 +1,27 @@
+// vite.config.js
+import { resolve } from "path";
 import { defineConfig } from "vite";
 
-import typescript from "@rollup/plugin-typescript";
-import path from "path";
-import { typescriptPaths } from "rollup-plugin-typescript-paths";
-
 export default defineConfig({
-  plugins: [],
-  resolve: {
-    alias: [
-      {
-        find: "~",
-        replacement: path.resolve(__dirname, "./src"),
-      },
-    ],
-  },
-  server: {
-    port: 3000,
-  },
   build: {
-    manifest: true,
-    minify: true,
-    reportCompressedSize: true,
     lib: {
-      entry: path.resolve(__dirname, "src/main.ts"),
-      fileName: "main",
-      // formats: ["es", "cjs"],
+      // 複数のエントリーポイントのディクショナリや配列にもできます
+      entry: resolve(__dirname, "src/main.ts"),
+      name: "MarkdownToNotion",
+      // 適切な拡張子が追加されます
+      fileName: "markdown-to-notion",
     },
     rollupOptions: {
-      external: [],
-      plugins: [
-        typescriptPaths({
-          preserveExtensions: true,
-        }),
-        typescript({
-          sourceMap: false,
-          declaration: true,
-          outDir: "dist",
-        }),
-      ],
+      // // ライブラリにバンドルされるべきではない依存関係を
+      // // 外部化するようにします
+      // external: ['vue'],
+      // output: {
+      //   // 外部化された依存関係のために UMD のビルドで使用する
+      //   // グローバル変数を提供します
+      //   globals: {
+      //     vue: 'Vue',
+      //   },
+      // },
     },
   },
 });
