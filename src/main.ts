@@ -1,8 +1,4 @@
-import { runNotion } from "./markdownToNotion";
-
-export const generateNotionObject = (text: string) => {
-  return runNotion(text);
-};
+export { runNotion, runText } from "./markdownToNotion";
 
 // const res = generateNotionObject(`
 // # heading h1
