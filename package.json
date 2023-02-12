@@ -1,8 +1,19 @@
 {
-  "name": "vite-lib",
+  "name": "markdown-to-notion",
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/markdown-to-notion.umd.cjs",
+  "module": "./dist/markdown-to-notion.js",
+  "exports": {
+    ".": {
+      "import": "./dist/markdown-to-notion.js",
+      "require": "./dist/markdown-to-notion.umd.cjs"
+    }
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
