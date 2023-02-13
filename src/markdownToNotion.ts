@@ -43,7 +43,7 @@ export const runNotion = (markdownText: string) => {
   // ASTをNotionオブジェクトに変換する
   const res = accessNotionObject(ast);
 
-  console.log("res", res);
+  // console.log("res", res);
 
   return res;
 };

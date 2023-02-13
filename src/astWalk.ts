@@ -15,7 +15,7 @@ export const accessNotionObject = (obj: any) => {
       });
   }
 
-  console.log({ obj }, obj.items);
+  // console.log({ obj }, obj.items);
   if (obj.type === `text`) {
     return {
       type: `text`,
@@ -37,7 +37,7 @@ export const accessNotionObject = (obj: any) => {
   } else if (
     // * は空行のリスト扱いになる
     obj.type === `paragraph` &&
-    (obj.raw === `- ` || obj.raw === `* `)
+    (obj.raw.trim() === `-` || obj.raw.trim() === `*`)
   ) {
     console.log({ obj });
     return [
@@ -55,7 +55,7 @@ export const accessNotionObject = (obj: any) => {
       const text = d.text;
       if (text && (text.startsWith(`[ ]`) || text.startsWith(`[x]`))) {
         const done = text.startsWith(`[x]`);
-        const formattedText = text.replace("[ ]", "").replace("[x]", "");
+        const formattedText = text.replace("[ ]", "").replace("[x]", "").trim();
         return {
           type: "to_do",
           to_do: {
@@ -74,7 +74,7 @@ export const accessNotionObject = (obj: any) => {
         return {
           type: `${listType}_list_item`,
           [`${listType}_list_item`]: {
-            rich_text: [d.text],
+            rich_text: !!d.text ? [d.text] : ``,
           },
         };
       }
