@@ -14,14 +14,12 @@ describe("空行のリスト", () => {
       ],
     ]`, () => {
       expect(runNotion(x)).toStrictEqual([
-        [
-          {
-            type: `bulleted_list_item`,
-            bulleted_list_item: {
-              rich_text: ``,
-            },
+        {
+          type: `bulleted_list_item`,
+          bulleted_list_item: {
+            rich_text: [],
           },
-        ],
+        },
       ]);
     });
   });

@@ -12,7 +12,8 @@ export const accessNotionObject = (obj: any) => {
       })
       .filter((d: any) => {
         return d !== null;
-      });
+      })
+      .flat();
   }
 
   // console.log({ obj }, obj.items);
@@ -32,22 +33,21 @@ export const accessNotionObject = (obj: any) => {
 
     return {
       type: `heading_${depth}`,
-      [`heading_${depth}`]: { rich_text: [obj.text] },
+      [`heading_${depth}`]: {
+        rich_text: [{ text: { content: obj.text, link: null } }],
+      },
     };
   } else if (
     // * は空行のリスト扱いになる
     obj.type === `paragraph` &&
     (obj.raw.trim() === `-` || obj.raw.trim() === `*`)
   ) {
-    console.log({ obj });
-    return [
-      {
-        type: `bulleted_list_item`,
-        bulleted_list_item: {
-          rich_text: ``,
-        },
+    return {
+      type: `bulleted_list_item`,
+      bulleted_list_item: {
+        rich_text: [],
       },
-    ];
+    };
   } else if (obj.type === `list`) {
     return obj.items.map((d: any) => {
       // TODOリスト、番号付きリスト、並列リスト
@@ -74,13 +74,14 @@ export const accessNotionObject = (obj: any) => {
         return {
           type: `${listType}_list_item`,
           [`${listType}_list_item`]: {
-            rich_text: !!d.text ? [d.text] : ``,
+            rich_text: !!d.text
+              ? [{ text: { content: d.text, link: null } }]
+              : [],
           },
         };
       }
     });
   } else if (obj.type === `space`) {
-    console.error(`space`);
     return null;
   } else {
     console.log(`unknown`, obj.type, obj);

@@ -10,11 +10,29 @@ it(`空行は無視される h1とh2のみ返される`, () => {
   ).toStrictEqual([
     {
       type: `heading_1`,
-      [`heading_1`]: { rich_text: [`text1`] },
+      [`heading_1`]: {
+        rich_text: [
+          {
+            text: {
+              content: "text1",
+              link: null,
+            },
+          },
+        ],
+      },
     },
     {
       type: `heading_2`,
-      [`heading_2`]: { rich_text: [`text2`] },
+      [`heading_2`]: {
+        rich_text: [
+          {
+            text: {
+              content: "text2",
+              link: null,
+            },
+          },
+        ],
+      },
     },
   ]);
 });
@@ -32,7 +50,19 @@ it(`e2e`, () => {
 * 
   `)
   ).toStrictEqual([
-    { type: "heading_1", heading_1: { rich_text: ["やりたいこと"] } },
+    {
+      type: "heading_1",
+      heading_1: {
+        rich_text: [
+          {
+            text: {
+              content: "やりたいこと",
+              link: null,
+            },
+          },
+        ],
+      },
+    },
     {
       type: "to_do",
       to_do: {
@@ -41,11 +71,59 @@ it(`e2e`, () => {
         color: "default",
       },
     },
-    { type: "heading_1", heading_1: { rich_text: ["Done"] } },
-    { type: "heading_2", heading_2: { rich_text: ["ChatGPT1日1問"] } },
-    { type: "heading_2", heading_2: { rich_text: ["Happenings"] } },
-    { type: "bulleted_list_item", bulleted_list_item: { rich_text: `` } },
-    { type: "heading_2", heading_2: { rich_text: ["感謝"] } },
-    { type: "bulleted_list_item", bulleted_list_item: { rich_text: `` } },
+    {
+      type: "heading_1",
+      heading_1: {
+        rich_text: [
+          {
+            text: {
+              content: "Done",
+              link: null,
+            },
+          },
+        ],
+      },
+    },
+    {
+      type: "heading_2",
+      heading_2: {
+        rich_text: [
+          {
+            text: {
+              content: "ChatGPT1日1問",
+              link: null,
+            },
+          },
+        ],
+      },
+    },
+    {
+      type: "heading_2",
+      heading_2: {
+        rich_text: [
+          {
+            text: {
+              content: "Happenings",
+              link: null,
+            },
+          },
+        ],
+      },
+    },
+    { type: "bulleted_list_item", bulleted_list_item: { rich_text: [] } },
+    {
+      type: "heading_2",
+      heading_2: {
+        rich_text: [
+          {
+            text: {
+              content: "感謝",
+              link: null,
+            },
+          },
+        ],
+      },
+    },
+    { type: "bulleted_list_item", bulleted_list_item: { rich_text: [] } },
   ]);
 });

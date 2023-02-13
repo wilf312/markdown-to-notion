@@ -14,25 +14,23 @@ describe("空行のリスト", () => {
       ],
     ]`, () => {
       expect(runNotion(x)).toStrictEqual([
-        [
-          {
-            type: `to_do`,
-            to_do: {
-              checked: false,
-              color: "default",
+        {
+          type: `to_do`,
+          to_do: {
+            checked: false,
+            color: "default",
 
-              rich_text: [
-                {
-                  text: {
-                    content: "",
-                    link: null,
-                  },
-                  type: "text",
+            rich_text: [
+              {
+                text: {
+                  content: "",
+                  link: null,
                 },
-              ],
-            },
+                type: "text",
+              },
+            ],
           },
-        ],
+        },
       ]);
     });
   });
@@ -49,25 +47,23 @@ describe("空行のリスト", () => {
       ],
     ]`, () => {
       expect(runNotion(x)).toStrictEqual([
-        [
-          {
-            type: `to_do`,
-            to_do: {
-              checked: true,
-              color: "default",
+        {
+          type: `to_do`,
+          to_do: {
+            checked: true,
+            color: "default",
 
-              rich_text: [
-                {
-                  text: {
-                    content: "",
-                    link: null,
-                  },
-                  type: "text",
+            rich_text: [
+              {
+                text: {
+                  content: "",
+                  link: null,
                 },
-              ],
-            },
+                type: "text",
+              },
+            ],
           },
-        ],
+        },
       ]);
     });
   });
