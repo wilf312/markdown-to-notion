@@ -1,4 +1,4 @@
-import { expect, describe, it } from "vitest";
+import { expect, test, describe, it } from "vitest";
 import { runNotion } from "./markdownToNotion";
 
 describe(`単体のmarkdownテスト`, () => {
@@ -146,4 +146,100 @@ it(`空行は無視される h1とh2のみ返される`, () => {
       [`heading_2`]: { rich_text: [`text2`] },
     },
   ]);
+});
+
+describe("空行のリスト", () => {
+  describe.each<[string]>([[`* `], [`- `]])("list宣言", (x) => {
+    test(`runNotion(${x}) = [
+      [
+        {
+          type: bulleted_list_item,
+          bulleted_list_item: {
+            rich_text: bulleted_list_item,
+          },
+        },
+      ],
+    ]`, () => {
+      expect(runNotion(x)).toStrictEqual([
+        [
+          {
+            type: `bulleted_list_item`,
+            bulleted_list_item: {
+              rich_text: ``,
+            },
+          },
+        ],
+      ]);
+    });
+  });
+
+  describe.each<[string]>([[`* [ ]`], [`- [ ]`]])("todo list宣言", (x) => {
+    test(`runNotion(${x}) = [
+      [
+        {
+          type: to_do,
+          to_do: {
+            rich_text: to_do,
+          },
+        },
+      ],
+    ]`, () => {
+      expect(runNotion(x)).toStrictEqual([
+        [
+          {
+            type: `to_do`,
+            to_do: {
+              checked: false,
+              color: "default",
+
+              rich_text: [
+                {
+                  text: {
+                    content: "",
+                    link: null,
+                  },
+                  type: "text",
+                },
+              ],
+            },
+          },
+        ],
+      ]);
+    });
+  });
+
+  describe.only.each<[string]>([[`* [x]`], [`- [x]`]])("todo list宣言", (x) => {
+    test(`runNotion(${x}) = [
+      [
+        {
+          type: to_do,
+          to_do: {
+            rich_text: to_do,
+          },
+        },
+      ],
+    ]`, () => {
+      expect(runNotion(x)).toStrictEqual([
+        [
+          {
+            type: `to_do`,
+            to_do: {
+              checked: true,
+              color: "default",
+
+              rich_text: [
+                {
+                  text: {
+                    content: "",
+                    link: null,
+                  },
+                  type: "text",
+                },
+              ],
+            },
+          },
+        ],
+      ]);
+    });
+  });
 });

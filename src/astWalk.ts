@@ -15,6 +15,7 @@ export const accessNotionObject = (obj: any) => {
       });
   }
 
+  console.log({ obj }, obj.items);
   if (obj.type === `text`) {
     return {
       type: `text`,
@@ -33,14 +34,28 @@ export const accessNotionObject = (obj: any) => {
       type: `heading_${depth}`,
       [`heading_${depth}`]: { rich_text: [obj.text] },
     };
+  } else if (
+    // * は空行のリスト扱いになる
+    obj.type === `paragraph` &&
+    (obj.raw === `- ` || obj.raw === `* `)
+  ) {
+    console.log({ obj });
+    return [
+      {
+        type: `bulleted_list_item`,
+        bulleted_list_item: {
+          rich_text: ``,
+        },
+      },
+    ];
   } else if (obj.type === `list`) {
     return obj.items.map((d: any) => {
       // TODOリスト、番号付きリスト、並列リスト
 
       const text = d.text;
-      if (text && (text.startsWith(`[ ] `) || text.startsWith(`[x] `))) {
-        const done = text.startsWith(`[x] `);
-        const formattedText = text.replace("[ ] ", "").replace("[x] ", "");
+      if (text && (text.startsWith(`[ ]`) || text.startsWith(`[x]`))) {
+        const done = text.startsWith(`[x]`);
+        const formattedText = text.replace("[ ]", "").replace("[x]", "");
         return {
           type: "to_do",
           to_do: {
@@ -68,7 +83,7 @@ export const accessNotionObject = (obj: any) => {
     console.error(`space`);
     return null;
   } else {
-    console.log(`unknown`, obj.type);
+    console.log(`unknown`, obj.type, obj);
     return (obj as any).children.map((d: any) => {
       return accessNotionObject(d);
     });
