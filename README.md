@@ -1,6 +1,6 @@
 # markdown-to-notion
 
-このライブラリはnotion APIを叩くときに必要なページオブジェクトをmarkdownから生成するためのツールです。
+このライブラリは notion API を叩くときに必要なページオブジェクトを markdown から生成するためのツールです。
 This library is a tool for generating the necessary page objects when hitting the Notion API, from Markdown. In other words, using this library makes it easy to convert Markdown format data into Notion pages when calling the Notion API.
 
 ## このライブラリの使い方 / how to use
@@ -19,5 +19,19 @@ const markdownText = `
 const notionObject = runNotion(markdownText); // for Notion API
 const notionObjectText = runText(markdownText); // for Text
 
-```
 
+notion.pages.create({
+  parent: { database_id: YOUR_DATABASE_ID },
+  properties: YOUR_PROPERTY,
+  children: runNotion(`
+# Today task
+* [ ] task1
+* [ ] task2
+
+## Happenings
+*
+
+`),
+})
+
+```
