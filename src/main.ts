@@ -1,4 +1,4 @@
-export { runNotion, runText } from "./markdownToNotion";
+export { lexer, parse } from "./markdownToNotion";
 
 // const res = generateNotionObject(`
 // # heading h1

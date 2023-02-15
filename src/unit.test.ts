@@ -1,9 +1,9 @@
 import { expect, it } from "vitest";
-import { runNotion } from "./markdownToNotion";
+import { lexer } from "./markdownToNotion";
 
 it(`空行は無視される h1とh2のみ返される`, () => {
   expect(
-    runNotion(`# text1
+    lexer(`# text1
 
 ## text2
   `)
@@ -39,7 +39,7 @@ it(`空行は無視される h1とh2のみ返される`, () => {
 
 it(`e2e`, () => {
   expect(
-    runNotion(`
+    lexer(`
 # やりたいこと
 * [ ] 
 # Done

@@ -25,7 +25,7 @@ const markdown2AST = (markdown: string) => {
   });
 };
 
-export const runText = (markdownText: string) => {
+export const parse = (markdownText: string) => {
   // markdownをASTに変換
   const ast = markdown2AST(markdownText);
 
@@ -36,7 +36,7 @@ export const runText = (markdownText: string) => {
   return prettierFormat(res);
 };
 
-export const runNotion = (markdownText: string) => {
+export const lexer = (markdownText: string) => {
   // markdownをASTに変換
   const ast = markdown2AST(markdownText);
 

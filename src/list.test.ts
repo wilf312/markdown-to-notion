@@ -1,9 +1,9 @@
 import { expect, describe, test } from "vitest";
-import { runNotion } from "./markdownToNotion";
+import { lexer } from "./markdownToNotion";
 
 describe("空行のリスト", () => {
   describe.each<[string]>([[`* `], [`- `], [`*`], [`-`]])("list宣言", (x) => {
-    test(`runNotion(${x}) = [
+    test(`lexer(${x}) = [
       [
         {
           type: bulleted_list_item,
@@ -13,7 +13,7 @@ describe("空行のリスト", () => {
         },
       ],
     ]`, () => {
-      expect(runNotion(x)).toStrictEqual([
+      expect(lexer(x)).toStrictEqual([
         {
           type: `bulleted_list_item`,
           bulleted_list_item: {

@@ -1,9 +1,9 @@
 import { expect, describe, it } from "vitest";
-import { runNotion } from "./markdownToNotion";
+import { lexer } from "./markdownToNotion";
 
 describe("空行のリスト", () => {
   describe.each<[string]>([[`* [ ]`], [`- [ ]`]])("todo list宣言", (x) => {
-    it(`runNotion(${x}) = [
+    it(`lexer(${x}) = [
       [
         {
           type: to_do,
@@ -13,7 +13,7 @@ describe("空行のリスト", () => {
         },
       ],
     ]`, () => {
-      expect(runNotion(x)).toStrictEqual([
+      expect(lexer(x)).toStrictEqual([
         {
           type: `to_do`,
           to_do: {
@@ -36,7 +36,7 @@ describe("空行のリスト", () => {
   });
 
   describe.each<[string]>([[`* [x]`], [`- [x]`]])("todo list宣言", (x) => {
-    it(`runNotion(${x}) = [
+    it(`lexer(${x}) = [
       [
         {
           type: to_do,
@@ -46,7 +46,7 @@ describe("空行のリスト", () => {
         },
       ],
     ]`, () => {
-      expect(runNotion(x)).toStrictEqual([
+      expect(lexer(x)).toStrictEqual([
         {
           type: `to_do`,
           to_do: {
