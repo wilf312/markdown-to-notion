@@ -1,6 +1,10 @@
 {
   "name": "markdown-to-notion",
-  "version": "0.0.5",
+  "version": "0.1.0",
+  "keywords": [
+    "notion",
+    "markdown"
+  ],
   "type": "module",
   "files": [
     "dist"
