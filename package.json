@@ -41,7 +41,7 @@
   "dependencies": {
     "@types/marked": "^4.0.8",
     "@types/prettier": "^2.7.2",
-    "marked": "^4.2.12",
+    "marked": "^8.0.0",
     "prettier": "^2.8.4"
   }
 }
